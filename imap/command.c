@@ -920,6 +920,10 @@ static void cmd_parse_status(struct ImapAccountData *adata, char *s)
   // force back to keep detecting new mail until the mailbox is opened
   if (m->has_new)
     mdata->uid_next = oldun;
+
+  struct EventMailbox ev_m = { m };
+  notify_send(m->notify, NT_MAILBOX, NT_MAILBOX_CHANGE, &ev_m);
+  mutt_debug(LL_DEBUG1, "IMAP MAILBOX %s has_new %s\n", mailbox_path(m), m->has_new ? "yes" : "no");
 }
 
 /**
