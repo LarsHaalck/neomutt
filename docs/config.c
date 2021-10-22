@@ -2591,6 +2591,22 @@
 ** notmuch://<absolute path>.
 */
 
+{ "nm_config_file", DT_STRING, 0 },
+/*
+** .pp
+** This variable specifies the Notmuch config file.
+** If nm_config_file and nm_profile are not set, no notmuch configuration
+** will be loaded.
+*/
+
+{ "nm_profile", DT_STRING, 0 },
+/*
+** .pp
+** This variable specifies the Notmuch profile.
+** If nm_config_file and nm_profile are not set, no notmuch configuration
+** will be loaded.
+*/
+
 { "nm_exclude_tags", DT_STRING, 0 },
 /*
 ** .pp

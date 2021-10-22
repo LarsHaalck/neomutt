@@ -98,6 +98,12 @@ static struct ConfigDef NotmuchVars[] = {
   { "nm_default_url", DT_STRING, 0, 0, nm_default_url_validator,
     "(notmuch) Path to the Notmuch database"
   },
+  { "nm_config_file", DT_STRING, IP "\0", 0, NULL,
+    "(notmuch) Path to a Notmuch config file"
+  },
+  { "nm_profile", DT_STRING, IP "\0", 0, NULL,
+    "(notmuch) Name of a Notmuch profile"
+  },
   { "nm_exclude_tags", DT_STRING, 0, 0, NULL,
     "(notmuch) Exclude messages with these tags"
   },

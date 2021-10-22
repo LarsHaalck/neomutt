@@ -100,6 +100,10 @@ notmuch_database_t *nm_db_do_open(const char *filename, bool writable, bool verb
   mutt_debug(LL_DEBUG1, "nm: db open '%s' %s (timeout %d)\n", filename,
              writable ? "[WRITE]" : "[READ]", c_nm_open_timeout);
 
+  const char *const c_nm_config_file =
+      cs_subset_string(NeoMutt->sub, "nm_config_file");
+  const char *const c_nm_profile = cs_subset_string(NeoMutt->sub, "nm_profile");
+
   const notmuch_database_mode_t mode =
       writable ? NOTMUCH_DATABASE_MODE_READ_WRITE : NOTMUCH_DATABASE_MODE_READ_ONLY;
 
@@ -107,15 +111,12 @@ notmuch_database_t *nm_db_do_open(const char *filename, bool writable, bool verb
   {
 #if LIBNOTMUCH_CHECK_VERSION(5, 4, 0)
     // notmuch 0.32-0.32.2 didn't bump libnotmuch version to 5.4.
-    st = notmuch_database_open_with_config(filename, mode, NULL, NULL, &db, &msg);
-    if (st == NOTMUCH_STATUS_NO_CONFIG)
-    {
-      mutt_debug(LL_DEBUG1,
-                 "nm: Could not find a Notmuch configuration file\n");
-      FREE(&msg);
+    // if no config file or profile was supplied, empty string is passed as
+    // filename to not load default config from default paths
+    st = notmuch_database_open_with_config(
+        filename, mode, (!c_nm_config_file && !c_nm_profile) ? "" : c_nm_config_file,
+        c_nm_profile, &db, &msg);
 
-      st = notmuch_database_open_with_config(filename, mode, "", NULL, &db, &msg);
-    }
 #elif LIBNOTMUCH_CHECK_VERSION(4, 2, 0)
     st = notmuch_database_open_verbose(filename, mode, &db, &msg);
 #elif defined(NOTMUCH_API_3)
